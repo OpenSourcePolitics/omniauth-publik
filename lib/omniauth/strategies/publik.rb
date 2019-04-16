@@ -19,9 +19,17 @@ module OmniAuth
       info do
         {
           email: raw_info["email"],
-          nickname: raw_info["preferred_username"],
-          name: "#{raw_info["given_name"]} #{raw_info["family_name"]}"
+          nickname: Decidim::UserBaseEntity.nicknamize(parse_nickname),
+          name: parse_name
         }
+      end
+
+      def parse_name
+        "#{raw_info["given_name"]} #{raw_info["family_name"]}"
+      end
+
+      def parse_nickname
+        raw_info["preferred_username"].blank? ? parse_name : raw_info["preferred_username"]
       end
 
       def client
