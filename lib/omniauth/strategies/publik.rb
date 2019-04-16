@@ -13,15 +13,14 @@ module OmniAuth
       option :client_options, {}
 
       uid do
-        raw_info["id"]
+        raw_info["sub"]
       end
 
       info do
         {
           email: raw_info["email"],
-          nickname: raw_info["nickname"],
-          name: raw_info["name"],
-          image: raw_info["image"]
+          nickname: raw_info["preferred_username"],
+          name: "#{raw_info["given_name"]} #{raw_info["family_name"]}"
         }
       end
 
