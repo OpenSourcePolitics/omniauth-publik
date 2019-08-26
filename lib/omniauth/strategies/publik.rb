@@ -23,14 +23,14 @@ module OmniAuth
           name: parse_name
         }
       end
-
+      
       def parse_name
-        "#{raw_info["given_name"]} #{raw_info["family_name"]}"
-      end
-
+	    "#{raw_info["given_name"]} #{raw_info["family_name"]}"
+	  end
+      
       def parse_nickname
-        raw_info["preferred_username"].blank? ? parse_name : raw_info["preferred_username"]
-      end
+	  	raw_info["preferred_username"].blank? ? parse_name : raw_info["preferred_username"]
+	  end
 
       def client
         options.client_options[:site] = options.site
@@ -40,7 +40,7 @@ module OmniAuth
       end
 
       def raw_info
-        @raw_info ||= access_token.get("/idp/oidc/user_info/").parsed
+	    @raw_info ||= access_token.get("/idp/oidc/user_info/").parsed
       end
 
       # https://github.com/intridea/omniauth-oauth2/issues/81
