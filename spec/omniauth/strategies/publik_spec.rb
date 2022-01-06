@@ -91,25 +91,11 @@ describe OmniAuth::Strategies::Publik do
         expect(subject.info[:nickname]).to eq(preferred_username)
       end
 
-      context "when 'preferred_username' is not defined" do
-        let(:raw_info_hash) do
-          {
-            "given_name" => given_name,
-            "email" => email,
-            "nickname" => nickname,
-            "family_name" => family_name
-          }
-        end
-
-        it "returns the nickname as name" do
-          expect(subject.info[:nickname]).not_to eq(raw_info_hash["nickname"])
-          expect(subject.info[:nickname]).to eq("#{raw_info_hash["given_name"]} #{raw_info_hash["family_name"]}")
-          expect(subject.info[:nickname]).to eq("#{given_name} #{family_name}")
-        end
-
-        context "and given_name is not defined" do
+      context "with undefined keys" do
+        context "when 'preferred_username' is not defined" do
           let(:raw_info_hash) do
             {
+              "given_name" => given_name,
               "email" => email,
               "nickname" => nickname,
               "family_name" => family_name
@@ -118,31 +104,158 @@ describe OmniAuth::Strategies::Publik do
 
           it "returns the nickname as name" do
             expect(subject.info[:nickname]).not_to eq(raw_info_hash["nickname"])
-            expect(subject.info[:nickname]).to eq(raw_info_hash["family_name"])
-            expect(subject.info[:nickname]).to eq(family_name)
+            expect(subject.info[:nickname]).to eq("#{raw_info_hash["given_name"]} #{raw_info_hash["family_name"]}")
+            expect(subject.info[:nickname]).to eq("#{given_name} #{family_name}")
           end
 
-          context "and preferred_name is not defined" do
+          context "and 'given_name' is not defined" do
             let(:raw_info_hash) do
               {
                 "email" => email,
                 "nickname" => nickname,
+                "family_name" => family_name
               }
             end
 
-            it "returns empty" do
+            it "returns the nickname as name" do
               expect(subject.info[:nickname]).not_to eq(raw_info_hash["nickname"])
-              expect(subject.info[:nickname]).to be_empty
+              expect(subject.info[:nickname]).to eq(raw_info_hash["family_name"])
+              expect(subject.info[:nickname]).to eq(family_name)
+            end
+
+            context "and 'family_name' is not defined" do
+              let(:raw_info_hash) do
+                {
+                  "email" => email,
+                  "nickname" => nickname,
+                }
+              end
+
+              it "returns empty" do
+                expect(subject.info[:nickname]).not_to eq(raw_info_hash["nickname"])
+                expect(subject.info[:nickname]).to be_empty
+              end
+            end
+          end
+        end
+      end
+
+      context "with empty keys" do
+        context "when 'preferred_username' is empty" do
+          let(:preferred_username) { "" }
+
+          it "returns the nickname as name" do
+            expect(subject.info[:nickname]).not_to eq(raw_info_hash["nickname"])
+            expect(subject.info[:nickname]).to eq("#{raw_info_hash["given_name"]} #{raw_info_hash["family_name"]}")
+            expect(subject.info[:nickname]).to eq("#{given_name} #{family_name}")
+          end
+
+          context "and 'given_name' is empty" do
+            let(:given_name) { "" }
+
+            it "returns the nickname as name" do
+              expect(subject.info[:nickname]).not_to eq(raw_info_hash["nickname"])
+              expect(subject.info[:nickname]).to eq(raw_info_hash["family_name"])
+              expect(subject.info[:nickname]).to eq(family_name)
+            end
+
+            context "and 'family_name' is empty" do
+              let(:family_name) { "" }
+
+              it "returns empty" do
+                expect(subject.info[:nickname]).not_to eq(raw_info_hash["nickname"])
+                expect(subject.info[:nickname]).to be_empty
+              end
             end
           end
         end
       end
     end
 
-    it "returns the name" do
-      expect(subject.info[:name]).to eq("#{raw_info_hash["given_name"]} #{raw_info_hash["family_name"]}")
-      expect(subject.info[:name]).to eq("#{given_name} #{family_name}")
+    describe "[:name]" do
+      it "returns the name" do
+        expect(subject.info[:name]).to eq("#{raw_info_hash["given_name"]} #{raw_info_hash["family_name"]}")
+        expect(subject.info[:name]).to eq("#{given_name} #{family_name}")
+      end
+
+      context "with undefined keys" do
+        context "when 'given_name' is not defined" do
+          let(:raw_info_hash) do
+            {
+              "email" => email,
+              "nickname" => nickname,
+              "preferred_username" => preferred_username,
+              "family_name" => family_name
+            }
+          end
+
+          it "returns family name" do
+            expect(subject.info[:name]).to eq(raw_info_hash["family_name"])
+            expect(subject.info[:name]).to eq(family_name)
+          end
+
+          context "and 'family_name' is not defined" do
+            let(:raw_info_hash) do
+              {
+                "email" => email,
+                "nickname" => nickname,
+                "preferred_username" => preferred_username,
+              }
+            end
+
+            it "returns empty" do
+              expect(subject.info[:name]).to be_empty
+            end
+          end
+        end
+
+        context "when 'family_name' is not defined" do
+          let(:raw_info_hash) do
+            {
+              "given_name" => given_name,
+              "email" => email,
+              "nickname" => nickname,
+              "preferred_username" => preferred_username,
+            }
+          end
+
+          it "returns the 'given_name'" do
+            expect(subject.info[:name]).to eq(raw_info_hash["given_name"])
+            expect(subject.info[:name]).to eq(given_name)
+          end
+        end
+      end
+
+      context "when keys are empty" do
+        context "when 'given_name' is empty" do
+          let(:given_name) { "" }
+
+          it "returns family name" do
+            expect(subject.info[:name]).to eq(raw_info_hash["family_name"])
+            expect(subject.info[:name]).to eq(family_name)
+          end
+
+          context "and 'family_name' is empty" do
+            let(:family_name) { "" }
+
+            it "returns empty" do
+              expect(subject.info[:name]).to be_empty
+            end
+          end
+        end
+
+        context "when 'family_name' is empty" do
+          let(:family_name) { "" }
+
+          it "returns the 'given_name'" do
+            expect(subject.info[:name]).to eq(raw_info_hash["given_name"])
+            expect(subject.info[:name]).to eq(given_name)
+          end
+        end
+      end
     end
+
+
 
     it "returns the email" do
       expect(subject.info[:email]).to eq(raw_info_hash["email"])
