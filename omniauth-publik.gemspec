@@ -23,7 +23,7 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency "omniauth", "~> 2.0.4"
   spec.add_dependency "omniauth-oauth2", ">= 1.7.2", "< 2.0"
-  spec.add_development_dependency "bundler", "~> 2.2.29"
+  spec.add_development_dependency "bundler", "~> 2.2.33"
   spec.add_development_dependency "rake", "~> 13.0"
   spec.add_development_dependency "rubocop"
   spec.add_development_dependency "rubocop-rspec"
