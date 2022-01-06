@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require "spec_helper"
-require "byebug"
 
 describe OmniAuth::Strategies::Publik do
   subject do
