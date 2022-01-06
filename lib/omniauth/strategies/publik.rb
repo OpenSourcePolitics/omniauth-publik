@@ -23,11 +23,11 @@ module OmniAuth
           name: parse_name
         }
       end
-      
+
       def parse_name
-	      "#{raw_info["given_name"]} #{raw_info["family_name"]}".strip
+        "#{raw_info["given_name"]} #{raw_info["family_name"]}".strip
       end
-      
+
       def parse_nickname
         return parse_name if raw_info["preferred_username"].nil? || raw_info["preferred_username"].empty?
 
@@ -42,7 +42,7 @@ module OmniAuth
       end
 
       def raw_info
-	@raw_info ||= access_token.get("/idp/oidc/user_info/").parsed
+        @raw_info ||= access_token.get("/idp/oidc/user_info/").parsed
       end
 
       # https://github.com/intridea/omniauth-oauth2/issues/81

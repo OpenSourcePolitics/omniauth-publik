@@ -13,10 +13,10 @@ describe OmniAuth::Strategies::Publik do
   let(:response) { instance_double("Response", parsed: parsed_response) }
   let(:strategy) do
     described_class.new(
-        app,
-        "CLIENT_ID",
-        "CLIENT_SECRET",
-        "https://connexion.publik.love"
+      app,
+      "CLIENT_ID",
+      "CLIENT_SECRET",
+      "https://connexion.publik.love"
     )
   end
   let(:app) do
@@ -26,11 +26,11 @@ describe OmniAuth::Strategies::Publik do
   end
   let(:raw_info_hash) do
     {
-        "given_name" => given_name,
-        "email" => email,
-        "nickname" => nickname,
-        "preferred_username" => preferred_username,
-        "family_name" => family_name
+      "given_name" => given_name,
+      "email" => email,
+      "nickname" => nickname,
+      "preferred_username" => preferred_username,
+      "family_name" => family_name
     }
   end
 
@@ -127,7 +127,7 @@ describe OmniAuth::Strategies::Publik do
               let(:raw_info_hash) do
                 {
                   "email" => email,
-                  "nickname" => nickname,
+                  "nickname" => nickname
                 }
               end
 
@@ -199,7 +199,7 @@ describe OmniAuth::Strategies::Publik do
               {
                 "email" => email,
                 "nickname" => nickname,
-                "preferred_username" => preferred_username,
+                "preferred_username" => preferred_username
               }
             end
 
@@ -215,7 +215,7 @@ describe OmniAuth::Strategies::Publik do
               "given_name" => given_name,
               "email" => email,
               "nickname" => nickname,
-              "preferred_username" => preferred_username,
+              "preferred_username" => preferred_username
             }
           end
 
@@ -283,7 +283,5 @@ describe OmniAuth::Strategies::Publik do
         end
       end
     end
-
-
   end
 end
