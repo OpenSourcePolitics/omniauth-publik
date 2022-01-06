@@ -67,11 +67,11 @@ describe OmniAuth::Strategies::Publik do
       end
 
       it "can't define authorize url" do
-        expect { subject.client.options[:authorize_url] }.to raise_error
+        expect { subject.client.options[:authorize_url] }.to raise_error(URI::InvalidURIError)
       end
 
       it "can't define token url" do
-        expect { subject.client.options[:token_url] }.to raise_error
+        expect { subject.client.options[:token_url] }.to raise_error(URI::InvalidURIError)
       end
     end
 
