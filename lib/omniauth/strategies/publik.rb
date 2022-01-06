@@ -5,11 +5,17 @@ require "open-uri"
 
 module OmniAuth
   module Strategies
+    class MissingOrUndefinedSiteOption < StandardError
+      def message
+        "Please you must define 'site' argument"
+      end
+    end
+
     class Publik < OmniAuth::Strategies::OAuth2
       args [:client_id, :client_secret, :site]
 
       option :name, :publik
-      option :site, nil
+      option :site, ""
       option :client_options, {}
 
       uid do
@@ -18,21 +24,25 @@ module OmniAuth
 
       info do
         {
-          email: raw_info["email"],
-          nickname: Decidim::UserBaseEntity.nicknamize(parse_nickname),
+          email: raw_info["email"] || "",
+          nickname: parse_nickname,
           name: parse_name
         }
       end
-      
+
       def parse_name
-	"#{raw_info["given_name"]} #{raw_info["family_name"]}"
+        "#{raw_info["given_name"]} #{raw_info["family_name"]}".strip
       end
-      
+
       def parse_nickname
-	raw_info["preferred_username"].blank? ? parse_name : raw_info["preferred_username"]
+        return parse_name if raw_info["preferred_username"].nil? || raw_info["preferred_username"].empty?
+
+        raw_info["preferred_username"]
       end
 
       def client
+        raise MissingOrUndefinedSiteOption if options.site.nil? || options.site.empty?
+
         options.client_options[:site] = options.site
         options.client_options[:authorize_url] = URI.join(options.site, "/idp/oidc/authorize/").to_s
         options.client_options[:token_url] = URI.join(options.site, "/idp/oidc/token/").to_s
@@ -40,7 +50,7 @@ module OmniAuth
       end
 
       def raw_info
-	@raw_info ||= access_token.get("/idp/oidc/user_info/").parsed
+        @raw_info ||= access_token.get("/idp/oidc/user_info/").parsed
       end
 
       # https://github.com/intridea/omniauth-oauth2/issues/81
