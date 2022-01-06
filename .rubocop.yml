@@ -1,4 +1,5 @@
-require: rubocop-rspec
+require:
+  - rubocop-rspec
 
 # Common configuration.
 AllCops:
@@ -16,6 +17,7 @@ AllCops:
   # behavior by overriding ExtraDetails, or by giving the
   # -E/--extra-details option.
   ExtraDetails: false
+  NewCops: enable
   # Additional cops that do not reference a style guide rule may be enabled by
   # default. Change behavior by overriding StyleGuideCopsOnly, or by giving
   # the --only-guide-cops option.
@@ -51,7 +53,8 @@ AllCops:
   # If a value is specified for TargetRubyVersion then it is used.
   # Else if .ruby-version exists and it contains an MRI version it is used.
   # Otherwise we fallback to the oldest officially supported Ruby version (2.0).
-  TargetRubyVersion: 2.3
+  TargetRubyVersion: 2.7
+  SuggestExtensions: false
 
   RSpec:
     Patterns:
@@ -75,7 +78,7 @@ Style/Alias:
     - prefer_alias_method
 
 # Align the elements of a hash literal if they span more than one line.
-Layout/AlignHash:
+Layout/HashAlignment:
   # Alignment of entries using hash rocket as separator. Valid values are:
   #
   # key - left alignment of keys
@@ -138,7 +141,7 @@ Layout/AlignHash:
     - ignore_implicit
     - ignore_explicit
 
-Layout/AlignParameters:
+Layout/ParameterAlignment:
   # Alignment of parameters in multi-line method calls.
   #
   # The `with_first_parameter` style aligns the following lines along the same
@@ -249,19 +252,14 @@ Style/BlockDelimiters:
     - proc
     - it
 
-Style/BracesAroundHashParameters:
-  EnforcedStyle: no_braces
-  SupportedStyles:
-    # The `braces` style enforces braces around all method parameters that are
-    # hashes.
-    - braces
-    # The `no_braces` style checks that the last parameter doesn't have braces
-    # around it.
-    - no_braces
-    # The `context_dependent` style checks that the last parameter doesn't have
-    # braces around it, but requires braces if the second to last parameter is
-    # also a hash literal.
-    - context_dependent
+Style/ExplicitBlockArgument:
+  Enabled: false
+
+Style/HashEachMethods:
+  Enabled: false
+
+Style/HashLikeCase:
+  MinBranchesCount: 5
 
 # Indentation of `when`.
 Layout/CaseIndentation:
@@ -436,9 +434,6 @@ Layout/ExtraSpacing:
   ForceEqualSignAlignment: false
 
 Naming/FileName:
-  # File names listed in AllCops:Include are excluded by default. Add extra
-  # excludes here.
-  Exclude: []
   # When true, requires that each source file should define a class or module
   # with a name which matches the file name (converted to ... case).
   # It further expects it to be nested inside modules which match the names
@@ -454,7 +449,7 @@ Naming/FileName:
   # files with a shebang in the first line).
   IgnoreExecutableScripts: true
 
-Layout/FirstParameterIndentation:
+Layout/FirstArgumentIndentation:
   EnforcedStyle: special_for_inner_method_call_in_parentheses
   SupportedStyles:
     # The first parameter should always be indented one step more than the
@@ -491,11 +486,9 @@ Style/FormatStringToken:
   EnforcedStyle: template
 
 Style/FrozenStringLiteralComment:
-  EnforcedStyle: when_needed
+  EnforcedStyle: always
   SupportedStyles:
-    # `when_needed` will add the frozen string literal comment to files
-    # only when the `TargetRubyVersion` is set to 2.3+.
-    - when_needed
+    - never
     # `always` will always add the frozen string literal comment to a file
     # regardless of the Ruby version or if `freeze` or `<<` are called on a
     # string literal. If you run code against multiple versions of Ruby, it is
@@ -544,7 +537,7 @@ Layout/IndentationWidth:
   Width: 2
 
 # Checks the indentation of the first element in an array literal.
-Layout/IndentArray:
+Layout/FirstArrayElementIndentation:
   # The value `special_inside_parentheses` means that array literals with
   # brackets that have their opening bracket on the same line as a surrounding
   # opening round parenthesis, shall have their first element indented relative
@@ -566,13 +559,13 @@ Layout/IndentArray:
   IndentationWidth: ~
 
 # Checks the indentation of assignment RHS, when on a different line from LHS
-Layout/IndentAssignment:
+Layout/AssignmentIndentation:
   # By default, the indentation width from Style/IndentationWidth is used
   # But it can be overridden by setting this parameter
   IndentationWidth: ~
 
 # Checks the indentation of the first key in a hash literal.
-Layout/IndentHash:
+Layout/FirstHashElementIndentation:
   # The value `special_inside_parentheses` means that hash literals with braces
   # that have their opening brace on the same line as a surrounding opening
   # round parenthesis, shall have their first key indented relative to the
@@ -599,9 +592,6 @@ Style/Lambda:
     - line_count_dependent
     - lambda
     - literal
-  Exclude:
-    - "**/types/**/*"
-    - "**/*_interface.rb"
 
 Style/LambdaCall:
   EnforcedStyle: call
@@ -772,6 +762,9 @@ Style/PercentQLiterals:
     - lower_case_q # Use %q when possible, %Q when necessary
     - upper_case_q # Always use %Q
 
+Style/SlicingWithRange:
+  Enabled: false
+
 Naming/PredicateName:
   # Predicate name prefixes.
   NamePrefix:
@@ -779,25 +772,22 @@ Naming/PredicateName:
     - has_
     - have_
   # Predicate name prefixes that should be removed.
-  NamePrefixBlacklist:
+  ForbiddenPrefixes:
     - is_
     - have_
   # Predicate names which, despite having a blacklisted prefix, or no ?,
   # should still be accepted
-  NameWhitelist:
+  AllowedMethods:
     - is_a?
-  # Exclude Rspec specs because there is a strong convetion to write spec
-  # helpers in the form of `have_something` or `be_something`.
   Exclude:
-    - "**/spec/**/*"
-    - "**/test/**/*"
+    - "spec/**/*"
 
 Style/PreferredHashMethods:
   Enabled: true
   EnforcedStyle: verbose
 
 Style/DateTime:
-  Enabled: false
+  Enabled: true
 
 Style/Documentation:
   Enabled: false
@@ -942,6 +932,9 @@ Layout/SpaceInsideStringInterpolation:
     - space
     - no_space
 
+Style/AccessModifierDeclarations:
+  Enabled: false
+
 Style/SymbolArray:
   EnforcedStyle: brackets
   SupportedStyles:
@@ -962,7 +955,7 @@ Style/TernaryParentheses:
     - require_no_parentheses
   AllowSafeAssignment: true
 
-Layout/TrailingBlankLines:
+Layout/TrailingEmptyLines:
   EnforcedStyle: final_newline
   SupportedStyles:
     - final_newline
@@ -1012,7 +1005,7 @@ Style/TrivialAccessors:
   # Commonly used in DSLs
   AllowDSLWriters: false
   IgnoreClassMethods: false
-  Whitelist:
+  AllowedMethods:
     - to_ary
     - to_a
     - to_c
@@ -1055,7 +1048,7 @@ Style/WordArray:
   # The MinSize option causes the WordArray rule to be ignored for arrays
   # smaller than a certain size.  The rule is only applied to arrays
   # whose element count is greater than or equal to MinSize.
-  MinSize: 0
+  MinSize: 2
   # The regular expression WordRegex decides what is considered a word.
   WordRegex: !ruby/regexp '/\A[\p{Word}\n\t]+\z/'
 
@@ -1083,18 +1076,8 @@ Metrics/ModuleLength:
 # Avoid complex methods.
 Metrics/CyclomaticComplexity:
   Max: 9
-
-Metrics/LineLength:
-  Max: 180
-  # To make it possible to copy or click on URIs in the code, we allow lines
-  # containing a URI to be longer than Max.
-  AllowHeredoc: true
-  AllowURI: true
-  URISchemes:
-    - http
-    - https
   Exclude:
-    - "**/spec/**/*"
+    - "bin/bundle"
 
 Metrics/MethodLength:
   CountComments: false  # count full line comments?
@@ -1110,12 +1093,16 @@ Metrics/PerceivedComplexity:
 
 ##################### Lint ##################################
 
-Lint/AmbiguousBlockAssociation:
-  Enabled: true
-
 # Allow safe assignment in conditions.
 Lint/AssignmentInCondition:
   AllowSafeAssignment: true
+
+Lint/ConstantDefinitionInBlock:
+  Enabled: false
+
+# Call super to initialize state of the parent class.
+Lint/MissingSuper:
+  Enabled: false
 
 # checks whether the end keywords are aligned properly for `do` `end` blocks.
 Layout/BlockAlignment:
@@ -1153,6 +1140,16 @@ Lint/InheritException:
     - runtime_error
     - standard_error
 
+Layout/LineLength:
+  Max: 180
+  # To make it possible to copy or click on URIs in the code, we allow lines
+  # containing a URI to be longer than Max.
+  AllowHeredoc: true
+  AllowURI: true
+  URISchemes:
+    - http
+    - https
+
 # Checks for unused block arguments
 Lint/UnusedBlockArgument:
   IgnoreEmptyBlocks: true
@@ -1165,14 +1162,7 @@ Lint/UnusedMethodArgument:
 
 ##################### Performance ############################
 
-Performance/RedundantMerge:
-  # Max number of key-value pairs to consider an offense
-  MaxKeyValuePairs: 2
-
 Metrics/BlockLength:
-  Enabled: false
-
-FactoryBot/StaticAttributeDefinedDynamically:
   Enabled: false
 
 RSpec/BeforeAfterAll:
@@ -1186,6 +1176,9 @@ RSpec/ContextWording:
     - without
     - and
 
+RSpec/ExampleLength:
+  Max: 49
+
 RSpec/ExpectInHook:
   Enabled: false
 
@@ -1198,8 +1191,33 @@ RSpec/LetSetup:
 RSpec/MessageSpies:
   Enabled: false
 
+RSpec/MultipleExpectations:
+  Enabled: false
+
+RSpec/MultipleMemoizedHelpers:
+  Max: 35
+
+RSpec/NestedGroups:
+  Max: 7
+
 RSpec/NamedSubject:
   Enabled: false
 
+RSpec/RepeatedExampleGroupDescription:
+  Enabled: false
+
+RSpec/RepeatedExampleGroupBody:
+  Enabled: false
 RSpec/VerifiedDoubles:
   Enabled: false
+
+RSpec/LeakyConstantDeclaration:
+  Enabled: false
+
+RSpec/DescribedClass:
+  Enabled: false
+
+RSpec/FilePath:
+  Exclude:
+    - "spec/omniauth/strategies/publik_spec.rb"
+# This is the default configuration file.
