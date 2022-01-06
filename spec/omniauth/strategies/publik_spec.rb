@@ -29,12 +29,16 @@ describe OmniAuth::Strategies::Publik do
         "given_name" => given_name,
         "email" => email,
         "nickname" => nickname,
+        "preferred_username" => preferred_username,
+        "family_name" => family_name
     }
   end
 
-  let(:given_name) { "Foo Bar" }
+  let(:given_name) { "Given name" }
   let(:email) { "foo@example.com" }
-  let(:nickname) { "BarFoo" }
+  let(:nickname) { "Nickname" }
+  let(:preferred_username) { "Preferred user name" }
+  let(:family_name) { "Family name" }
 
   before do
     allow(strategy).to receive(:access_token).and_return(access_token)
@@ -80,15 +84,64 @@ describe OmniAuth::Strategies::Publik do
       allow(strategy).to receive(:raw_info).and_return(raw_info_hash)
     end
 
-    it "returns the nickname" do
-      expect(subject.info[:nickname]).not_to eq(raw_info_hash["nickname"])
-      expect(subject.info[:nickname]).to eq(raw_info_hash["given_name"])
-      expect(subject.info[:nickname]).to eq("Foo Bar")
+    describe "[:nickname]" do
+      it "returns the nickname as preferred username" do
+        expect(subject.info[:nickname]).not_to eq(raw_info_hash["nickname"])
+        expect(subject.info[:nickname]).to eq(raw_info_hash["preferred_username"])
+        expect(subject.info[:nickname]).to eq(preferred_username)
+      end
+
+      context "when 'preferred_username' is not defined" do
+        let(:raw_info_hash) do
+          {
+            "given_name" => given_name,
+            "email" => email,
+            "nickname" => nickname,
+            "family_name" => family_name
+          }
+        end
+
+        it "returns the nickname as name" do
+          expect(subject.info[:nickname]).not_to eq(raw_info_hash["nickname"])
+          expect(subject.info[:nickname]).to eq("#{raw_info_hash["given_name"]} #{raw_info_hash["family_name"]}")
+          expect(subject.info[:nickname]).to eq("#{given_name} #{family_name}")
+        end
+
+        context "and given_name is not defined" do
+          let(:raw_info_hash) do
+            {
+              "email" => email,
+              "nickname" => nickname,
+              "family_name" => family_name
+            }
+          end
+
+          it "returns the nickname as name" do
+            expect(subject.info[:nickname]).not_to eq(raw_info_hash["nickname"])
+            expect(subject.info[:nickname]).to eq(raw_info_hash["family_name"])
+            expect(subject.info[:nickname]).to eq(family_name)
+          end
+
+          context "and preferred_name is not defined" do
+            let(:raw_info_hash) do
+              {
+                "email" => email,
+                "nickname" => nickname,
+              }
+            end
+
+            it "returns empty" do
+              expect(subject.info[:nickname]).not_to eq(raw_info_hash["nickname"])
+              expect(subject.info[:nickname]).to be_empty
+            end
+          end
+        end
+      end
     end
 
     it "returns the name" do
-      expect(subject.info[:name]).to eq(raw_info_hash["given_name"])
-      expect(subject.info[:name]).to eq("Foo Bar")
+      expect(subject.info[:name]).to eq("#{raw_info_hash["given_name"]} #{raw_info_hash["family_name"]}")
+      expect(subject.info[:name]).to eq("#{given_name} #{family_name}")
     end
 
     it "returns the email" do
@@ -98,8 +151,9 @@ describe OmniAuth::Strategies::Publik do
     context "when name is missing" do
       let(:given_name) { "" }
 
-      it "returns empty" do
-        expect(subject.info[:name]).to be_empty
+      it "returns family name" do
+        expect(subject.info[:name]).to eq(raw_info_hash["family_name"])
+        expect(subject.info[:name]).to eq(family_name)
       end
     end
   end
