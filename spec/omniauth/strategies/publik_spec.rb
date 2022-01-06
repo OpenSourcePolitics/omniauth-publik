@@ -255,19 +255,35 @@ describe OmniAuth::Strategies::Publik do
       end
     end
 
+    describe "[:email]" do
+      it "returns the email" do
+        expect(subject.info[:email]).to eq(raw_info_hash["email"])
+      end
 
+      context "when 'email' is not defined" do
+        let(:raw_info_hash) do
+          {
+            "given_name" => given_name,
+            "nickname" => nickname,
+            "preferred_username" => preferred_username,
+            "family_name" => family_name
+          }
+        end
 
-    it "returns the email" do
-      expect(subject.info[:email]).to eq(raw_info_hash["email"])
-    end
+        it "returns empty" do
+          expect(subject.info[:email]).to be_empty
+        end
+      end
 
-    context "when name is missing" do
-      let(:given_name) { "" }
+      context "when 'email' is empty" do
+        let(:email) { "" }
 
-      it "returns family name" do
-        expect(subject.info[:name]).to eq(raw_info_hash["family_name"])
-        expect(subject.info[:name]).to eq(family_name)
+        it "returns empty" do
+          expect(subject.info[:email]).to be_empty
+        end
       end
     end
+
+
   end
 end

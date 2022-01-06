@@ -18,7 +18,7 @@ module OmniAuth
 
       info do
         {
-          email: raw_info["email"],
+          email: raw_info["email"] || "",
           nickname: parse_nickname,
           name: parse_name
         }
