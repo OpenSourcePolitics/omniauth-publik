@@ -16,9 +16,11 @@ describe OmniAuth::Strategies::Publik do
       app,
       "CLIENT_ID",
       "CLIENT_SECRET",
-      "https://connexion.publik.love"
+      client_site
     )
   end
+
+  let(:client_site) { "https://connexion.publik.love" }
   let(:app) do
     lambda do |_env|
       [200, {}, ["Hello."]]
@@ -47,6 +49,14 @@ describe OmniAuth::Strategies::Publik do
   describe "client options" do
     it "has the correct site" do
       expect(subject.client.site).to eq("https://connexion.publik.love")
+    end
+
+    context "when site is empty" do
+      let(:client_site) { "" }
+
+      it "raises an ArgumentError" do
+        expect { subject.client.site }.to raise_error(OmniAuth::Strategies::InvalidSiteOption, "Please you must define 'site' argument")
+      end
     end
 
     it "has the correct authorize url" do
