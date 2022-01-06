@@ -55,7 +55,23 @@ describe OmniAuth::Strategies::Publik do
       let(:client_site) { "" }
 
       it "raises an ArgumentError" do
-        expect { subject.client.site }.to raise_error(OmniAuth::Strategies::InvalidSiteOption, "Please you must define 'site' argument")
+        expect { subject.client.site }.to raise_error(OmniAuth::Strategies::MissingOrUndefinedSiteOption, "Please you must define 'site' argument")
+      end
+    end
+
+    context "when site is not an url" do
+      let(:client_site) { "http : // example.com" }
+
+      it "raises an ArgumentError" do
+        expect { subject.client.site }.to raise_error(URI::InvalidURIError, "bad URI(is not URI?): \"http : // example.com\"")
+      end
+
+      it "can't define authorize url" do
+        expect { subject.client.options[:authorize_url] }.to raise_error
+      end
+
+      it "can't define token url" do
+        expect { subject.client.options[:token_url] }.to raise_error
       end
     end
 

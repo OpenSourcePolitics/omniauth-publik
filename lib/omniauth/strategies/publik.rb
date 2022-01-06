@@ -5,7 +5,7 @@ require "open-uri"
 
 module OmniAuth
   module Strategies
-    class InvalidSiteOption < StandardError
+    class MissingOrUndefinedSiteOption < StandardError
       def message
         "Please you must define 'site' argument"
       end
@@ -15,7 +15,7 @@ module OmniAuth
       args [:client_id, :client_secret, :site]
 
       option :name, :publik
-      option :site, nil
+      option :site, ""
       option :client_options, {}
 
       uid do
@@ -41,7 +41,7 @@ module OmniAuth
       end
 
       def client
-        raise InvalidSiteOption if options.site.nil? || options.site.empty?
+        raise MissingOrUndefinedSiteOption if options.site.nil? || options.site.empty?
 
         options.client_options[:site] = options.site
         options.client_options[:authorize_url] = URI.join(options.site, "/idp/oidc/authorize/").to_s
