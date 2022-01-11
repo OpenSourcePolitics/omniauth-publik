@@ -7,32 +7,55 @@ This is the [Publik](https://www.publik.love/) strategy for OmniAuth. It should 
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'omniauth-publik', git: 'https://github.com/OpenSourcePolitics/omniauth-publik'
+gem 'omniauth-publik', git: 'https://github.com/OpenSourcePolitics/omniauth-publik', branch: 'v0.0.9'
+```
+
+Or using Rubygems (soon available) : 
+```ruby
+gem 'omniauth-publik'
 ```
 
 And then execute:
 
     $ bundle
 
-## Usage
+## Usage with Decidim
 
-First you need to [create an OAuth application](https://github.com/OpenSourcePolitics/decidim/blob/master/docs/customization/oauth.md) at your Decidim installation in order to get the Client ID, Client Secret and Site parameters.
-
-Next, tell OmniAuth about this strategy. In a Decidim application using Devise you would create a file like `config/initializers/omniauth_publik.rb` with this code:
+In order to implement the `omniauth-publik` library in your [Decidim](https://github.com/decidim/decidim) instance, you must create a new initializer (ex: `config/initializers/omniauth_publik.rb` )in your application with the following:
 
 ```ruby
-Devise.setup do |config|
-  config.omniauth :publik,
-                  ENV["DECIDIM_CLIENT_ID"],
-                  ENV["DECIDIM_CLIENT_SECRET"],
-                  ENV["DECIDIM_SITE_URL"],
-                  scope: "openid email profile"
-end
+# File: config/initializers/omniauth_publik.rb
 
-Decidim::User.omniauth_providers << :publik
+if Rails.application.secrets.dig(:omniauth, :publik).present?
+  Rails.application.config.middleware.use OmniAuth::Builder do
+    provider(
+      :publik,
+      setup: ->(env) {
+        request = Rack::Request.new(env)
+        organization = Decidim::Organization.find_by(host: request.host)
+        provider_config = organization.enabled_omniauth_providers[:publik]
+        env["omniauth.strategy"].options[:client_id] = provider_config[:client_id]
+        env["omniauth.strategy"].options[:client_secret] = provider_config[:client_secret]
+        env["omniauth.strategy"].options[:site] = provider_config[:site_url]
+      },
+      scope: :public
+    )
+  end
+end
 ```
 
-You should set the environment variables with the values you got from your Decidim installation.
+Then you need to add the omniauth keys to the `config/secrets.yml` with the following: 
+
+```yaml
+  omniauth:
+    publik:
+      enabled: true
+      client_id: <%= ENV["OMNIAUTH_PUBLIK_CLIENT_ID"] %>
+      client_secret: <%= ENV["OMNIAUTH_PUBLIK_CLIENT_SECRET"] %>
+      site_url: <%= ENV["OMNIAUTH_PUBLIK_SITE_URL"] %>
+```
+
+You can find more information on the [official documentation](https://docs.decidim.org/en/services/social_providers/).
 
 ## Authentication Hash
 
