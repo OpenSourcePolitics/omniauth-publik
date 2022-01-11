@@ -25,7 +25,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency "omniauth-oauth2", ">= 1.7.2", "< 2.0"
   spec.add_development_dependency "bundler", "~> 2.3.4"
   spec.add_development_dependency "rake", "~> 13.0"
-  spec.add_development_dependency "rubocop"
+  spec.add_development_dependency "rubocop", "1.23"
   spec.add_development_dependency "rubocop-rspec"
   spec.metadata["rubygems_mfa_required"] = "true"
 end
