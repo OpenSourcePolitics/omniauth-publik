@@ -90,7 +90,7 @@ describe OmniAuth::Strategies::Publik do
     end
 
     it "is a combination of host, script name, and callback path" do
-      expect(subject.callback_url).to eq("https://example.com/sub_uri/sub_uri/auth/publik/callback")
+      expect(subject.callback_url).to eq("https://example.com/sub_uri/auth/publik/callback")
     end
 
     context "when script_name is empty" do
