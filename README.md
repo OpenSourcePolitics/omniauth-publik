@@ -7,10 +7,10 @@ This is the [Publik](https://www.publik.love/) strategy for OmniAuth. It should 
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'omniauth-publik', git: 'https://github.com/OpenSourcePolitics/omniauth-publik', branch: 'v0.0.9'
+gem 'omniauth-publik', git: 'https://github.com/OpenSourcePolitics/omniauth-publik', branch: 'develop'
 ```
 
-Or using Rubygems (soon available) : 
+Or using Rubygems (soon available) :
 ```ruby
 gem 'omniauth-publik'
 ```
@@ -44,7 +44,7 @@ if Rails.application.secrets.dig(:omniauth, :publik).present?
 end
 ```
 
-Then you need to add the omniauth keys to the `config/secrets.yml` with the following: 
+Then you need to add the omniauth keys to the `config/secrets.yml` with the following:
 
 ```yaml
   omniauth:
