@@ -307,6 +307,14 @@ describe OmniAuth::Strategies::Publik do
           expect(subject.info[:email]).to be_empty
         end
       end
+
+      context "when 'email' is uppercase" do
+        let(:email) { "FOO+EXAMPLE@example.com" }
+
+        it "returns downcased email" do
+          expect(subject.info[:email]).to eq("foo+example@example.com")
+        end
+      end
     end
   end
 end
