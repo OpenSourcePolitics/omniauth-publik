@@ -1221,3 +1221,7 @@ RSpec/FilePath:
   Exclude:
     - "spec/omniauth/strategies/publik_spec.rb"
 # This is the default configuration file.
+
+RSpec/VerifiedDoubleReference:
+  Exclude:
+    - "spec/omniauth/strategies/publik_spec.rb"
