@@ -2,6 +2,7 @@
 
 require "bundler/setup"
 require "rspec"
+require "byebug"
 require "rack/test"
 require "omniauth"
 require "omniauth/test"
