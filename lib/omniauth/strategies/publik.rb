@@ -24,7 +24,7 @@ module OmniAuth
 
       info do
         {
-          email: raw_info["email"] || "",
+          email: raw_info["email"]&.downcase || "",
           nickname: parse_nickname,
           name: parse_name
         }
@@ -55,7 +55,7 @@ module OmniAuth
 
       # https://github.com/intridea/omniauth-oauth2/issues/81
       def callback_url
-        full_host + script_name + callback_path
+        full_host + callback_path
       end
     end
   end
