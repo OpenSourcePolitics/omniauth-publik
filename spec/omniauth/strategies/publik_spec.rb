@@ -62,7 +62,7 @@ describe OmniAuth::Strategies::Publik do
       let(:client_site) { "http : // example.com" }
 
       it "raises an ArgumentError" do
-        expect { subject.client.site }.to raise_error(URI::InvalidURIError, "bad URI(is not URI?): \"http : // example.com\"")
+        expect { subject.client.site }.to raise_error(URI::InvalidURIError, "bad URI (is not URI?): \"http : // example.com\"")
       end
 
       it "can't define authorize url" do
