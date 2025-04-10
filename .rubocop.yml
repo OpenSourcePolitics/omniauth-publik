@@ -1,6 +1,5 @@
-require:
+plugins:
   - rubocop-rspec
-
 # Common configuration.
 AllCops:
   # Default formatter will be used if no -f/--format option is given.
@@ -1217,7 +1216,7 @@ RSpec/LeakyConstantDeclaration:
 RSpec/DescribedClass:
   Enabled: false
 
-RSpec/FilePath:
+RSpec/SpecFilePathFormat:
   Exclude:
     - "spec/omniauth/strategies/publik_spec.rb"
 # This is the default configuration file.
