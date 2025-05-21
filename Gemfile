@@ -7,7 +7,7 @@ gemspec
 
 group :test do
   gem "byebug"
-  gem "rack", ">= 1.6.2"
+  gem "rack", "~> 2.2"
   gem "rack-test"
-  gem "rspec", "~> 3.0"
+  gem "rspec", "~> 3.1"
 end

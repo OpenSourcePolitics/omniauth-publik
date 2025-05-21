@@ -2,7 +2,7 @@ name: "[CI] Lint"
 on: "push"
 
 env:
-  RUBY_VERSION: 2.7.1
+  RUBY_VERSION: 3.2.2
 
 jobs:
   lint:
@@ -13,7 +13,7 @@ jobs:
         if: "github.ref != 'refs/heads/develop'"
         env:
           GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
-      - uses: actions/checkout@v2.0.0
+      - uses: actions/checkout@v3
         with:
           fetch-depth: 1
       - uses: ruby/setup-ruby@v1

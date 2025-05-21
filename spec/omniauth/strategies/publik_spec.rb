@@ -62,7 +62,7 @@ describe OmniAuth::Strategies::Publik do
       let(:client_site) { "http : // example.com" }
 
       it "raises an ArgumentError" do
-        expect { subject.client.site }.to raise_error(URI::InvalidURIError, "bad URI(is not URI?): \"http : // example.com\"")
+        expect { subject.client.site }.to raise_error(URI::InvalidURIError, "bad URI (is not URI?): \"http : // example.com\"")
       end
 
       it "can't define authorize url" do
@@ -85,8 +85,7 @@ describe OmniAuth::Strategies::Publik do
 
   describe "#callback_url" do
     before do
-      allow(strategy).to receive(:full_host).and_return("https://example.com")
-      allow(strategy).to receive(:script_name).and_return("/sub_uri")
+      allow(strategy).to receive_messages(full_host: "https://example.com", script_name: "/sub_uri")
     end
 
     it "is a combination of host, script name, and callback path" do
