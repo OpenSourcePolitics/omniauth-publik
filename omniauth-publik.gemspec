@@ -13,19 +13,20 @@ Gem::Specification.new do |spec|
   spec.summary = "OmniAuth strategy for Publik"
   spec.description = "OmniAuth strategy for Publik"
   spec.homepage = "https://github.com/OpenSourcePolitics/omniauth-publik"
-  spec.required_ruby_version = ">= 3.2"
+  spec.required_ruby_version = ">= 3.3"
   spec.files = `git ls-files -z`.split("\x0").reject do |f|
     f.match(%r{^(test|spec|features)/})
   end
   spec.bindir = "exe"
   spec.executables = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ["lib"]
-  # rubocop:disable Gemspec/DevelopmentDependencies
+
   spec.add_dependency "omniauth", "~> 2.1"
   spec.add_dependency "omniauth-oauth2", ">= 1.7.2", "< 2.0"
+  # rubocop:disable Gemspec/DevelopmentDependencies
   spec.add_development_dependency "bundler", ">= 2.4"
-  spec.add_development_dependency "rake", "~> 13.2"
-  spec.add_development_dependency "rubocop", "~> 1.69"
+  spec.add_development_dependency "rake", "~> 13.3"
+  spec.add_development_dependency "rubocop", "1.78.0"
   spec.add_development_dependency "rubocop-rspec"
   # rubocop:enable Gemspec/DevelopmentDependencies
   spec.metadata["rubygems_mfa_required"] = "true"
